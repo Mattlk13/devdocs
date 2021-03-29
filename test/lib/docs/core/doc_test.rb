@@ -387,5 +387,19 @@ class DocsDocTest < MiniTest::Spec
         assert_equal ['https://4'], version.links
       end
     end
+
+    it "compares versions" do
+      instance = doc.versions.first.new
+      assert_equal 'Up-to-date', instance.outdated_state('1', '1')
+      assert_equal 'Up-to-date', instance.outdated_state('1.2', '1.2')
+      assert_equal 'Up-to-date', instance.outdated_state('1.2.2', '1.2.2')
+      assert_equal 'Up-to-date', instance.outdated_state('1.2.2', '1.2.3')
+      assert_equal "Outdated major version", instance.outdated_state('1', '2')
+      assert_equal "Outdated minor version", instance.outdated_state('1.2', '1.3')
+      assert_equal "Outdated major version", instance.outdated_state('9', '10')
+      assert_equal "Outdated major version", instance.outdated_state('99', '101')
+      assert_equal 'Up-to-date', instance.outdated_state('2006-01-02', '2006-01-03')
+      assert_equal "Outdated minor version", instance.outdated_state('2006-01-02', '2006-02-03')
+    end
   end
 end

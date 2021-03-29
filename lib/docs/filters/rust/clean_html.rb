@@ -27,6 +27,18 @@ module Docs
           end
         end
 
+        # Fix notable trait sections
+        css('.method, .rust.trait').each do |node|
+          traitSection = node.at_css('.notable-traits')
+
+          if traitSection
+            traitSectionContent = traitSection.css('.notable-traits-tooltiptext')
+            traitSection.css('.notable-traits-tooltip').remove
+            traitSection.add_child(traitSectionContent)
+            node.after(traitSection)
+          end
+        end
+
         css('.rusttest', '.test-arrow', 'hr').remove
 
         css('.docblock.attributes').each do |node|
@@ -34,8 +46,10 @@ module Docs
         end
 
         css('a.header').each do |node|
-          node.first_element_child['id'] = node['name'] || node['id']
-          node.before(node.children).remove
+          unless node.first_element_child.nil?
+            node.first_element_child['id'] = node['name'] || node['id']
+            node.before(node.children).remove
+          end
         end
 
         css('.docblock > h1:not(.section-header)').each { |node| node.name = 'h4' }
@@ -49,11 +63,16 @@ module Docs
         end
 
         css('> .impl-items', '> .docblock', 'pre > pre', '.tooltiptext', '.tooltip').each do |node|
+          # see .tooltip.ignore::after in https://doc.rust-lang.org/rustdoc1.50.0.css
+          node.content += ' This example is not tested' if node['class'].include?('ignore')
+          node.content += ' This example deliberately fails to compile' if node['class'].include?('compile_fail')
+          node.content += ' This example panics' if node['class'].include?('should_panic')
+          node.content += ' This code runs with edition ' + node['data-edition'] if node['class'].include?('edition')
           node.before(node.children).remove
         end
 
         css('h1 > a', 'h2 > a', 'h3 > a', 'h4 > a', 'h5 > a').each do |node|
-          node.before(node.children).remove
+          node.before(node.children).remove if node.parent.at_css('.srclink').nil?
         end
 
         css('pre > code').each do |node|
@@ -69,19 +88,6 @@ module Docs
         doc.first_element_child.name = 'h1' if doc.first_element_child.name = 'h2'
         at_css('h1').content = 'Rust Documentation' if root_page?
 
-        css('.table-display').each do |node|
-          node.css('td').each do |td|
-            node.before(td.children)
-          end
-          node.remove
-        end
-
-        css('.important-traits').to_a.each_with_index do |node, index|
-          content = node.at_css('.content.hidden .content')
-          node.at_css('.content.hidden').replace(content) if content
-          node.parent.after(node) if node.parent.name.in?(%(h2 h3 h4))
-        end
-
         css('code.content').each do |node|
           node.name = 'pre'
           node.css('.fmt-newline').each do |line|
@@ -94,6 +100,10 @@ module Docs
         css('.since + .srclink').each do |node|
           node.previous_element.before(node)
         end
+
+        css('.sidebar').remove
+
+        css('.collapse-toggle').remove
 
         doc
       end

@@ -1,17 +1,18 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module Docs
   class Openjdk
     class CleanHtmlFilter < Filter
       def call
-        css('.topNav', '.subNav', '.bottomNav', '.legalCopy', 'noscript', '.subTitle').remove
+        css('.topNav', '.subNav', '.bottomNav', '.legalCopy', 'noscript', '.subTitle', 'hr').remove
 
         # Preserve internal fragment links
         # Transform <a name="foo"><!-- --></a><bar>text</bar>
         #      into <bar id="foo">text</bar>
-        css('a[name]').each do |node|
+        css('a[name]','a[id]').each do |node|
           if node.children.all?(&:blank?)
-            node.next_element['id'] = node['name'] if node.next_element
+            node.next_element['id'] = (node['id'] || node['name'])if node.next_element
             node.remove
           end
         end
@@ -22,18 +23,16 @@ module Docs
           node.remove
         end
 
-        # Replace summary tables with their detail content
-        css('h3[id$=".summary"]').each do |node|
-          id = node['id'].sub('summary', 'detail')
-          detail = at_css("h3[id='#{id}']") || at_css("h3[id='#{id.remove('optional.').remove('required.')}']")
-          node.parent.children = detail.parent.children if detail
+        # remove captions in tables
+        css('table caption').each do |node|
+          node.remove
         end
 
         css('h3[id$=".summary"]', 'h3[id$=".detail"]').each do |node|
           node.content = node.content.remove(' Summary').remove(' Detail').pluralize
         end
 
-        if root_page?
+        if root_page? && version == '8'
           css('.header')[1].remove
           css('.contentContainer')[0].remove
           css('.contentContainer')[-1].remove
@@ -45,7 +44,10 @@ module Docs
             end
           end
 
-          at_css('h1').content = "OpenJDK #{release} Documentation" + (version != release ? " (#{version.split(' ').last})" : '')
+        end
+
+        if root_page?
+          at_css('h1').content = "OpenJDK #{release} Documentation"
         end
 
         css('table').each do |node|
@@ -125,6 +127,13 @@ module Docs
 
         css('*[class]').each do |node|
           node.remove_attribute('class') unless node['class'] == 'inheritance'
+        end
+
+        # fix ul section that contains summaries or tables
+        css('ul').each do |node|
+          node.css('section').each do |subnode|
+            node.add_previous_sibling(subnode)
+          end
         end
 
         doc

@@ -36,9 +36,17 @@ module Docs
     ]
 
     options[:attribution] = <<-HTML
-      &copy; 2010&ndash;2017 Ericsson AB<br>
+      &copy; 2010&ndash;2020 Ericsson AB<br>
       Licensed under the Apache License, Version 2.0.
     HTML
+
+    version '23' do
+      self.release = '23.2'
+    end
+
+    version '22' do
+      self.release = '22.3'
+    end
 
     version '21' do
       self.release = '21.0'
@@ -57,8 +65,7 @@ module Docs
     end
 
     def get_latest_version(opts)
-      doc = fetch_doc('https://www.erlang.org/downloads', opts)
-      doc.at_css('.col-lg-3 > ul > li').content.strip.sub(/OTP /, '')
+      get_latest_github_release('erlang', 'otp', opts)[4..-1]
     end
   end
 end

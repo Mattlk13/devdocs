@@ -2,6 +2,8 @@ module Docs
   class Elixir
     class EntriesFilter < Docs::EntriesFilter
       def get_name
+        css('h1 .app-vsn').remove
+
         if current_url.path.start_with?('/getting-started')
           at_css('h1').content.strip.remove(/\.\z/)
         else
@@ -29,6 +31,8 @@ module Docs
           else
             if name.start_with?('Phoenix')
               name.split('.')[0..2].join('.')
+            elsif name.start_with?('mix ')
+              'Mix Tasks'
             else
               name.split('.').first
             end
@@ -37,21 +41,25 @@ module Docs
       end
 
       def additional_entries
-        return [] if type == 'Exceptions' || type == 'Guide'
+        return [] if type == 'Exceptions' || type == 'Guide' || root_page?
 
-        css('.detail-header .signature').map do |node|
-          id = node.parent['id']
+        css('.detail-header').map do |node|
+          id = node['id']
           name = node.content.strip
+
           name.remove! %r{\(.*\)}
           name.remove! 'left '
           name.remove! ' right'
           name.sub! 'sigil_', '~'
 
-          unless node.parent['class'].end_with?('macro') || self.name.start_with?('Kernel')
+          if self.name && !self.name.start_with?('Kernel')
             name.prepend "#{self.name}."
           end
 
-          name << " (#{id.split('/').last})" if id =~ /\/\d+\z/
+          if id =~ %r{/\d+\z}
+            arity = id.split('/').last
+            name << " (#{arity})"
+          end
 
           [name, id]
         end

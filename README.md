@@ -4,13 +4,17 @@ DevDocs combines multiple developer documentations in a clean and organized web 
 
 DevDocs was created by [Thibaut Courouble](https://thibaut.me) and is operated by [freeCodeCamp](https://www.freecodecamp.org).
 
+## We are currently searching for maintainers
+
+Please reach out to the community on [Gitter](https://gitter.im/FreeCodeCamp/DevDocs) if you would like to join the team!
+
 Keep track of development news:
 
 * Join the contributor chat room on [Gitter](https://gitter.im/FreeCodeCamp/DevDocs)
 * Watch the repository on [GitHub](https://github.com/freeCodeCamp/devdocs/subscription)
 * Follow [@DevDocs](https://twitter.com/DevDocs) on Twitter
 
-**Table of Contents:** [Quick Start](#quick-start) · [Vision](#vision) · [App](#app) · [Scraper](#scraper) · [Commands](#available-commands) · [Contributing](#contributing) · [Documentation](#documentation) · [Plugins and Extensions](#plugins-and-extensions) · [License](#copyright--license) · [Questions?](#questions)
+**Table of Contents:** [Quick Start](#quick-start) · [Vision](#vision) · [App](#app) · [Scraper](#scraper) · [Commands](#available-commands) · [Contributing](#contributing) · [Documentation](#documentation) · [Related Projects](#related-projects) · [License](#copyright--license) · [Questions?](#questions)
 
 ## Quick Start
 
@@ -18,9 +22,9 @@ Unless you wish to contribute to the project, we recommend using the hosted vers
 
 DevDocs is made of two pieces: a Ruby scraper that generates the documentation and metadata, and a JavaScript app powered by a small Sinatra app.
 
-DevDocs requires Ruby 2.6.0, libcurl, and a JavaScript runtime supported by [ExecJS](https://github.com/rails/execjs#readme) (included in OS X and Windows; [Node.js](https://nodejs.org/en/) on Linux). Once you have these installed, run the following commands:
+DevDocs requires Ruby 2.6.x, libcurl, and a JavaScript runtime supported by [ExecJS](https://github.com/rails/execjs#readme) (included in OS X and Windows; [Node.js](https://nodejs.org/en/) on Linux). Once you have these installed, run the following commands:
 
-```
+```sh
 git clone https://github.com/freeCodeCamp/devdocs.git && cd devdocs
 gem install bundler
 bundle install
@@ -30,13 +34,13 @@ bundle exec rackup
 
 Finally, point your browser at [localhost:9292](http://localhost:9292) (the first request will take a few seconds to compile the assets). You're all set.
 
-The `thor docs:download` command is used to download pre-generated documentations from DevDocs's servers (e.g. `thor docs:download html css`). You can see the list of available documentations and versions by running `thor docs:list`. To update all downloaded documentations, run `thor docs:download --installed`.
+The `thor docs:download` command is used to download pre-generated documentations from DevDocs's servers (e.g. `thor docs:download html css`). You can see the list of available documentations and versions by running `thor docs:list`. To update all downloaded documentations, run `thor docs:download --installed`. To download and install all documentation this project has available, run `thor docs:download --all`.
 
 **Note:** there is currently no update mechanism other than `git pull origin master` to update the code and `thor docs:download --installed` to download the latest version of the docs. To stay informed about new releases, be sure to [watch](https://github.com/freeCodeCamp/devdocs/subscription) this repository.
 
 Alternatively, DevDocs may be started as a Docker container:
 
-```
+```sh
 # First, build the image
 git clone https://github.com/freeCodeCamp/devdocs.git && cd devdocs
 docker build -t thibaut/devdocs .
@@ -95,7 +99,7 @@ More information about [scrapers](./docs/scraper-reference.md) and [filters](./d
 
 The command-line interface uses [Thor](http://whatisthor.com). To see all commands and options, run `thor list` from the project's root.
 
-```
+```sh
 # Server
 rackup              # Start the server (ctrl+c to stop)
 rackup --help       # List server options
@@ -112,10 +116,9 @@ thor docs:clean     # Delete documentation packages
 # Console
 thor console        # Start a REPL
 thor console:docs   # Start a REPL in the "Docs" module
-Note: tests can be run quickly from within the console using the "test" command. Run "help test"
-for usage instructions.
 
-# Tests
+# Tests can be run quickly from within the console using the "test" command. 
+# Run "help test" for usage instructions.
 thor test:all       # Run all tests
 thor test:docs      # Run "Docs" tests
 thor test:app       # Run "App" tests
@@ -138,29 +141,32 @@ Contributions are welcome. Please read the [contributing guidelines](./.github/C
 * [Filter Reference](./docs/filter-reference.md)
 * [Maintainers’ Guide](./docs/maintainers.md)
 
-## Plugins and Extensions
+## Related Projects
 
-* [Chrome web app](https://chrome.google.com/webstore/detail/devdocs/mnfehgbmkapmjnhcnbodoamcioleeooe)
-* [Ubuntu Touch app](https://uappexplorer.com/app/devdocsunofficial.berkes)
-* [Sublime Text plugin](https://sublime.wbond.net/packages/DevDocs)
-* [Atom plugin](https://atom.io/packages/devdocs)
-* [Brackets extension](https://github.com/gruehle/dev-docs-viewer)
-* [Fluid](http://fluidapp.com) for turning DevDocs into a real OS X app
-* [GTK shell / Vim integration](https://github.com/naquad/devdocs-shell)
-* [Emacs lookup](https://github.com/skeeto/devdocs-lookup)
-* [Alfred Workflow](https://github.com/yannickglt/alfred-devdocs)
-* [Vim search plugin with Devdocs in its defaults](https://github.com/waiting-for-dev/vim-www) Just set `let g:www_shortcut_engines = { 'devdocs': ['Devdocs', '<leader>dd'] }` to have a `:Devdocs` command and a `<leader>dd` mapping.
-* [Visual Studio Code plugin](https://marketplace.visualstudio.com/items?itemName=akfish.vscode-devdocs ) (1)
-* [Visual Studio Code plugin](https://marketplace.visualstudio.com/items?itemName=deibit.devdocs) (2)
-* [Desktop application](https://github.com/egoist/devdocs-desktop)
-* [Doc Browser](https://github.com/qwfy/doc-browser) is a native Linux app that supports DevDocs docsets
-* [GNOME Application](https://github.com/hardpixel/devdocs-desktop) GTK3 application with search integrated in headerbar
-* [macOS Application](https://github.com/dteoh/devdocs-macos)
-* [Android Application](https://github.com/Merith-TK/devdocs_webapp_kotlin) is a fully working, advanced WebView
+Made something cool? Feel free to open a PR to add a new row to this table!
+
+| Project                                                                                                 | Description                                                            | Last commit                                                                                                                                                                |
+|---------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Chrome web app](https://chrome.google.com/webstore/detail/devdocs/mnfehgbmkapmjnhcnbodoamcioleeooe)    | Chrome Web App which adds a shortcut to DevDocs apps page.             | N/A                                                                                                                                                                        |
+| [Ubuntu Touch app](https://uappexplorer.com/app/devdocsunofficial.berkes)                               | Application for devices running Ubuntu Touch.                          | N/A                                                                                                                                                                        |
+| [Sublime Text plugin](https://sublime.wbond.net/packages/DevDocs)                                       | Sublime Text plugin to search DevDocs by selection or by input.        | [![Latest GitHub commit](https://img.shields.io/github/last-commit/vitorbritto/sublime-devdocs?logo=github&label)](https://github.com/vitorbritto/sublime-devdocs)         |
+| [Atom plugin](https://atom.io/packages/devdocs)                                                         | Atom plugin adding the `doc` command to search DevDocs.                | [![Latest GitHub commit](https://img.shields.io/github/last-commit/masnun/atom-devdocs?logo=github&label)](https://github.com/masnun/atom-devdocs)                         |
+| [gruehle/dev-docs-viewer](https://github.com/gruehle/dev-docs-viewer)                                   | Brackets extension for searching and viewing DevDocs content.          | [![Latest GitHub commit](https://img.shields.io/github/last-commit/gruehle/dev-docs-viewer?logo=github&label)](https://github.com/gruehle/dev-docs-viewer)                 |
+| [naquad/devdocs-shell](https://github.com/naquad/devdocs-shell)                                         | GTK shell with Vim integration.                                        | [![Latest GitHub commit](https://img.shields.io/github/last-commit/naquad/devdocs-shell?logo=github&label)](https://github.com/naquad/devdocs-shell)                       |
+| [skeeto/devdocs-lookup](https://github.com/skeeto/devdocs-lookup)                                       | Quick Emacs API lookup on DevDocs.                                     | [![Latest GitHub commit](https://img.shields.io/github/last-commit/skeeto/devdocs-lookup?logo=github&label)](https://github.com/skeeto/devdocs-lookup)                     |
+| [yannickglt/alfred-devdocs](https://github.com/yannickglt/alfred-devdocs)                               | Alfred workflow for DevDocs.                                           | [![Latest GitHub commit](https://img.shields.io/github/last-commit/yannickglt/alfred-devdocs?logo=github&label)](https://github.com/yannickglt/alfred-devdocs)             |
+| [waiting-for-dev/vim-www](https://github.com/waiting-for-dev/vim-www)                                   | Vim search plugin with DevDocs in its defaults.                        | [![Latest GitHub commit](https://img.shields.io/github/last-commit/waiting-for-dev/vim-www?logo=github&label)](https://github.com/waiting-for-dev/vim-www)                 |
+| [vscode-devdocs for VS Code](https://marketplace.visualstudio.com/items?itemName=akfish.vscode-devdocs) | VS Code plugin to open and search DevDocs inside VS Code.              | [![Latest GitHub commit](https://img.shields.io/github/last-commit/akfish/vscode-devdocs?logo=github&label)](https://github.com/akfish/vscode-devdocs)                     |
+| [devdocs for VS Code](https://marketplace.visualstudio.com/items?itemName=deibit.devdocs)               | VS Code plugin to open the browser to search selected text on DevDocs. | [![Latest GitHub commit](https://img.shields.io/github/last-commit/deibit/vscode-devdocs?logo=github&label)](https://github.com/deibit/vscode-devdocs)                     |
+| [egoist/devdocs-desktop](https://github.com/egoist/devdocs-desktop)                                     | Cross-platform desktop application for DevDocs.                        | [![Latest GitHub commit](https://img.shields.io/github/last-commit/egoist/devdocs-desktop?logo=github&label)](https://github.com/egoist/devdocs-desktop)                   |
+| [qwfy/doc-browser](https://github.com/qwfy/doc-browser)                                                 | Native Linux app that supports DevDocs docsets.                        | [![Latest GitHub commit](https://img.shields.io/github/last-commit/qwfy/doc-browser?logo=github&label)](https://github.com/qwfy/doc-browser)                               |
+| [hardpixel/devdocs-desktop](https://github.com/hardpixel/devdocs-desktop)                               | GTK3 application for DevDocs with search integrated in the headerbar.  | [![Latest GitHub commit](https://img.shields.io/github/last-commit/hardpixel/devdocs-desktop?logo=github&label)](https://github.com/hardpixel/devdocs-desktop)             |
+| [dteoh/devdocs-macos](https://github.com/dteoh/devdocs-macos)                                           | Native macOS application for DevDocs.                                  | [![Latest GitHub commit](https://img.shields.io/github/last-commit/dteoh/devdocs-macos?logo=github&label)](https://github.com/dteoh/devdocs-macos)                         |
+| [Merith-TK/devdocs_webapp_kotlin](https://github.com/Merith-TK/devdocs_webapp_kotlin)                   | Android application which shows DevDocs in a webview.                  | [![Latest GitHub commit](https://img.shields.io/github/last-commit/Merith-TK/devdocs_webapp_kotlin?logo=github&label)](https://github.com/Merith-TK/devdocs_webapp_kotlin) |
 
 ## Copyright / License
 
-Copyright 2013-2019 Thibaut Courouble and [other contributors](https://github.com/freeCodeCamp/devdocs/graphs/contributors)
+Copyright 2013–2021 Thibaut Courouble and [other contributors](https://github.com/freeCodeCamp/devdocs/graphs/contributors)
 
 This software is licensed under the terms of the Mozilla Public License v2.0. See the [COPYRIGHT](./COPYRIGHT) and [LICENSE](./LICENSE) files.
 

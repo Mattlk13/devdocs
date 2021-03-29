@@ -6,7 +6,7 @@ This document is intended for [DevDocs maintainers](#list-of-maintainers).
 
 - PRs should be approved by at least one maintainer before being merged.
 
-- PRs that add or update documentations should always be merged locally, and the app deployed, before the merge is pushed to GitHub.
+- PRs that add or update documentations should always be built and tested locally, and the doc files uploaded by the `thor docs:upload` command, before the PR is merged on GitHub.
 
   This workflow is required because there is a dependency between the local and production environments. The `thor docs:download` command downloads documentations from production files uploaded by the `thor docs:upload` command. If a PR adding a new documentation is merged and pushed to GitHub before the files have been uploaded to production, the `thor docs:download` will fail for the new documentation and the docker container will not build properly until the new documentation is deployed to production.
 
@@ -14,10 +14,7 @@ This document is intended for [DevDocs maintainers](#list-of-maintainers).
 
 The process for updating docs is as follow:
 
-- Make version/release changes in the scraper file.
-- If needed, update the copyright notice of the documentation in the scraper file (`options[:attribution]`) and the about page (`about_tmpl.coffee`). The copyright notice must be the same as the one on the original documentation.
-- Run `thor docs:generate`.
-- Make sure the documentation still works well. The `thor docs:generate` command outputs a summary of the changes, which helps identifying issues (e.g. deleted files) and new pages to check out in the app. Verify locally that everything works, especially the files that were created (if any), and that the categorization of entries is still good. Often, updates will require code changes to tweak some new markup in the source website or categorize new entries.
+- Follow the checklist in [CONTRIBUTING.md#updating-existing-documentations](../.github/CONTRIBUTING.md#updating-existing-documentations).
 - Commit the changes (protip: use the `thor docs:commit` command documented below).
 - Optional: do more updates.
 - Run `thor docs:upload` (documented below).
@@ -91,12 +88,52 @@ If any issue arises, run `heroku rollback` to rollback to the previous version o
 
 If this is your first deploy, make sure another maintainer is around to assist. 
 
-## List of maintainers
+## Infrastructure
 
-- [Jed Fox](https://github.com/j-f1)
-- [Jasper van Merle](https://github.com/jmerle)
+The bundled documents are available at downloads.devdocs.io and the documents themselves at documents.devdocs.io.  Download and document requests are proxied to S3 buckets devdocs-downloads.s3.amazonaws.com and devdocs-documents.s3.amazonaws.com respectively.
+
+If there's ever a need to create a new proxy VM (and the `devdocs-proxy` snapshot is not available) then the new vm should be provisioned as follows:
+
+```bash
+# we need at least nginx 1.19.x
+wget https://nginx.org/keys/nginx_signing.key
+apt-key add nginx_signing.key
+echo 'deb https://nginx.org/packages/mainline/ubuntu/ focal nginx' >> /etc/apt/sources.list
+echo 'deb-src https://nginx.org/packages/mainline/ubuntu/ focal nginx' >> /etc/apt/sources.list
+apt-get -y remove nginx-common
+apt-get -y update
+apt-get -y install nginx
+
+# the config is on github
+rm -rf /etc/nginx/*
+rm -rf /etc/nginx/.* 2> /dev/null
+git clone https://github.com/freeCodeCamp/devdocs-nginx-config.git /etc/nginx
+
+# at this point we need to add the certs from Cloudflare and test the config
+nginx -t 
+
+# if nginx is already running, just 
+# ps aux | grep nginx 
+# find the number and kill it
+
+nginx
+```
+
+## List of maintainers in alphabetical order
+
+The following people (used to) maintain DevDocs:
+
 - [Ahmad Abdolsaheb](https://github.com/ahmadabdolsaheb)
+- [Bryan Hernández](https://github.com/MasterEnoc)
+- [Jasper van Merle](https://github.com/jmerle)
+- [Jed Fox](https://github.com/j-f1)
 - [Mrugesh Mohapatra](https://github.com/raisedadead)
+- [Oliver Eyton-Williams](https://github.com/ojeytonwilliams)
+- [Simon Legner](https://github.com/simon04)
 - [Thibaut Courouble](https://github.com/thibaut)
 
+To reach out, please ping [@freeCodeCamp/devdocs](https://github.com/orgs/freeCodeCamp/teams/devdocs).
+
 Interested in helping maintain DevDocs? Come talk to us on [Gitter](https://gitter.im/FreeCodeCamp/DevDocs) :)
+
+In addition, we appreciate the major contributions made by [these great people](https://github.com/freeCodeCamp/devdocs/graphs/contributors).

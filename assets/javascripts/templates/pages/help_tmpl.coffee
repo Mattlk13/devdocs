@@ -1,6 +1,7 @@
 app.templates.helpPage = ->
   ctrlKey = if $.isMac() then 'cmd' else 'ctrl'
   navKey = if $.isMac() then 'cmd' else 'alt'
+  arrowScroll = app.settings.get('arrowScroll')
 
   aliases_one = {}
   aliases_two = {}
@@ -57,7 +58,8 @@ app.templates.helpPage = ->
       <ul>
         <li>On Chrome, the setup is done automatically. Simply press <code class="_label">tab</code> when devdocs.io is autocompleted
             in the omnibox (to set a custom keyword, click <em>Manage search engines\u2026</em> in Chrome's settings).
-        <li>On Firefox, right-click the DevDocs search field and select <em>Add a Keyword for this Search…</em>. Then, type the added keyword followed by a query in the address bar to search DevDocs.
+        <li>On Firefox, <a href="https://support.mozilla.org/en-US/kb/add-or-remove-search-engine-firefox#w_add-a-search-engine-from-the-address-bar">add the search from the address bar</a>:
+            Click ••• in the address bar, and select <em>Add Search Engine</em>. Then, you can add a keyword for this search engine in the preferences.
   </dl>
   <p>
     <i>Note: the above search features only work for documentations that are enabled.</i>
@@ -66,10 +68,12 @@ app.templates.helpPage = ->
   <h3 class="_shortcuts-title">Sidebar</h3>
   <dl class="_shortcuts-dl">
     <dt class="_shortcuts-dt">
+      #{if arrowScroll then '<code class="_shortcut-code">shift</code> + ' else ''}
       <code class="_shortcut-code">&darr;</code>
       <code class="_shortcut-code">&uarr;</code>
     <dd class="_shortcuts-dd">Move selection
     <dt class="_shortcuts-dt">
+      #{if arrowScroll then '<code class="_shortcut-code">shift</code> + ' else ''}
       <code class="_shortcut-code">&rarr;</code>
       <code class="_shortcut-code">&larr;</code>
     <dd class="_shortcuts-dd">Show/hide sub-list
@@ -90,11 +94,15 @@ app.templates.helpPage = ->
       <code class="_shortcut-code">#{navKey} + &rarr;</code>
     <dd class="_shortcuts-dd">Go back/forward
     <dt class="_shortcuts-dt">
-      <code class="_shortcut-code">alt + &darr;</code>
-      <code class="_shortcut-code">alt + &uarr;</code>
-      <br>
-      <code class="_shortcut-code">shift + &darr;</code>
-      <code class="_shortcut-code">shift + &uarr;</code>
+      #{if arrowScroll
+          '<code class="_shortcut-code">&darr;</code> ' +
+          '<code class="_shortcut-code">&uarr;</code>'
+        else
+          '<code class="_shortcut-code">alt + &darr;</code> ' +
+          '<code class="_shortcut-code">alt + &uarr;</code>' +
+          '<br>' +
+          '<code class="_shortcut-code">shift + &darr;</code> ' +
+          '<code class="_shortcut-code">shift + &uarr;</code>'}
     <dd class="_shortcuts-dd">Scroll step by step<br><br>
     <dt class="_shortcuts-dt">
       <code class="_shortcut-code">space</code>

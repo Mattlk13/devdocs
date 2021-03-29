@@ -10,6 +10,7 @@ module Docs
 
       TYPE_BY_DIR = {
         'command' => 'Commands',
+        'guide' => 'Guides',
         'manual' => 'Manual',
         'module' => 'Modules',
         'policy' => 'Policies',
@@ -20,6 +21,7 @@ module Docs
         'prop_sf' => 'Properties: Source Files',
         'prop_test' => 'Properties: Tests',
         'prop_tgt' => 'Properties: Targets',
+        'envvar' => 'Environment Variables',
         'variable' => 'Variables' }
 
       def get_name
