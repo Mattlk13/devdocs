@@ -16,7 +16,7 @@ Want to contribute? Great. Please review the following guidelines carefully and 
 
 ## Reporting bugs
 
-1. Update to the most recent master release; the bug may already be fixed.
+1. Update to the most recent main release; the bug may already be fixed.
 2. Search for existing issues; it's possible someone has already encountered this bug.
 3. Try to isolate the problem and include steps to reproduce it.
 4. Share as much information as possible (e.g. browser/OS environment, log output, stack trace, screenshots, etc.).
@@ -44,7 +44,7 @@ Use the [Trello board](https://trello.com/b/6BmTulfx/devdocs-documentation) wher
 
 ## Contributing new documentations
 
-See the [`docs` folder](https://github.com/freeCodeCamp/devdocs/tree/master/docs) to learn how to add new documentations.
+See the [`docs` folder](https://github.com/freeCodeCamp/devdocs/tree/main/docs) to learn how to add new documentations.
 
 **Important:** the documentation's license must permit alteration, redistribution and commercial use, and the documented software must be released under an open source license. Feel free to get in touch if you're not sure if a documentation meets those requirements.
 
@@ -58,15 +58,29 @@ In addition to the [guidelines for contributing code](#contributing-code-and-fea
 
 ## Updating existing documentations
 
-Please don't submit a pull request updating the version number of a documentation, unless a change is required in the scraper and you've verified that it works.
+If the latest [documentation versions report](https://github.com/freeCodeCamp/devdocs/issues?utf8=%E2%9C%93&q=Documentation+versions+report+is%3Aissue+author%3Adevdocs-bot+sort%3Acreated-desc) wrongly shows a documentation to be up-to-date, please open an issue or a PR to fix it.
 
-To ask that an existing documentation be updated, first check the last two [documentation versions reports](https://github.com/freeCodeCamp/devdocs/issues?utf8=%E2%9C%93&q=Documentation+versions+report+is%3Aissue+author%3Adevdocs-bot+sort%3Acreated-desc). Only create an issue if the documentation has been wrongly marked as up-to-date.
+**Important:** PR's that update documentation versions that do not contain the checklist shown to you in section B of the PR template may be closed without review.
+
+Follow the following steps to update documentations to their latest version:
+
+1. Make version/release changes in the scraper file.
+2. Check if the license is still correct. If you update `options[:attribution]`, also update the documentation's entry in the array in [`assets/javascripts/templates/pages/about_tmpl.coffee`](../assets/javascripts/templates/pages/about_tmpl.coffee) to match.
+3. If the documentation has a custom icon, ensure the icons in <code>public/icons/*your_scraper_name*/</code> are up-to-date. If you pull the updated icon from a place different than the one specified in the `SOURCE` file, make sure to replace the old link with the new one.
+4. If `self.links` is defined, check if the urls are still correct.
+5. Generate the docs using `thor docs:generate <doc>`.
+6. Make sure `thor docs:generate` doesn't show errors and that the documentation still works well. Verify locally that everything works and that the categorization of entries is still good. Often, updates will require code changes in the scraper or its filters to tweak some new markup in the source website or to categorize new entries.
+7. Repeat steps 5 and 6 for all versions that you updated. `thor docs:generate` accepts a `--version` argument to specify which version to scrape.
+8. Create a PR and make sure to fill the checklist in section B of the PR template (remove the other sections).
 
 ## Coding conventions
 
 * two spaces; no tabs
 * no trailing whitespace; blank lines should have no spaces; new line at end-of-file
 * use the same coding style as the rest of the codebase
+
+These conventions are formalized in [our `.editorconfig` file](../.editorconfig).
+Check out [EditorConfig.org](https://editorconfig.org/) to learn how to make your tools adhere to it.
 
 ## Questions?
 

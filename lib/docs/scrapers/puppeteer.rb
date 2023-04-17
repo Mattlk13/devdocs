@@ -1,9 +1,9 @@
 module Docs
   class Puppeteer < Github
-    self.release = '1.10.0'
-    self.base_url = 'https://github.com/GoogleChrome/puppeteer/blob/v1.8.0/docs/api.md'
+    self.release = '7.1.0'
+    self.base_url = "https://github.com/puppeteer/puppeteer/blob/v#{self.release}/docs/api.md"
     self.links = {
-      code: 'https://github.com/GoogleChrome/puppeteer'
+      code: 'https://github.com/puppeteer/puppeteer/'
     }
 
     html_filters.push 'puppeteer/entries', 'puppeteer/clean_html'
@@ -11,7 +11,7 @@ module Docs
     options[:container] = '.markdown-body'
 
     options[:attribution] = <<-HTML
-      &copy; 2017 Google Inc<br>
+      &copy; 2021 Google Inc<br>
       Licensed under the Apache License 2.0.
     HTML
 

@@ -5,6 +5,10 @@ module Docs
     self.type = 'angularjs'
     self.root_path = 'api.html'
     self.initial_paths = %w(guide.html guide/controller.html)
+    self.links = {
+      home: 'https://angularjs.org/',
+      code: 'https://github.com/angular/angular.js'
+    }
 
     html_filters.push 'angularjs/clean_html', 'angularjs/entries', 'title'
     text_filters.push 'angularjs/clean_urls'
@@ -31,11 +35,15 @@ module Docs
     end
 
     options[:only_patterns] = [%r{\Aapi}, %r{\Aguide}]
-    options[:skip] = %w(api/ng.html)
+    options[:skip] = %w(api/ng.html guide/tutorial/step_14.html guide/api.html guide/tutorial/.html)
+    options[:skip_patterns] = [
+      /error\/\$compile/,
+      /misc/,
+    ]
 
     options[:attribution] = <<-HTML
-      &copy; 2010&ndash;2017 Google, Inc.<br>
-      Licensed under the Creative Commons Attribution License 4.0.
+      &copy; 2010&ndash;2020 Google, Inc.<br>
+      Licensed under the Creative Commons Attribution License 3.0.
     HTML
 
     stub '' do
@@ -45,8 +53,18 @@ module Docs
       capybara.execute_script("return document.querySelector('.side-navigation').innerHTML")
     end
 
+    version '1.8' do
+      self.release = '1.8.2'
+      self.base_url = "https://code.angularjs.org/#{release}/docs/partials/"
+    end
+
+    version '1.7' do
+      self.release = '1.7.8'
+      self.base_url = "https://code.angularjs.org/#{release}/docs/partials/"
+    end
+
     version '1.6' do
-      self.release = '1.6.6'
+      self.release = '1.6.9'
       self.base_url = "https://code.angularjs.org/#{release}/docs/partials/"
     end
 

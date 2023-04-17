@@ -19,16 +19,24 @@ module Docs
 
       def additional_entries
         return [] unless !root_page? && self.type == self.name # api page
+        return [] if self.slug == 'environment-variables'
 
-        at_css('.mainContainer ul').css('li > a').map do |node|
-          name = node.at_css('code').content.strip
+        entries = []
+
+        at_css('.mainContainer h2 + ul, ul.toc-headings').css('li > a').each do |node|
+          code = node.at_css('code')
+          next if code.nil?
+
+          name = code.content.strip
           name.sub! %r{\(.*\)}, '()'
           name.remove! %r{[\s=<].*}
           name.prepend 'jest ' if name.start_with?('--')
           name.prepend 'Config: ' if slug == 'configuration'
           id = node['href'].remove('#')
-          [name, id]
+
+          entries << [name, id]
         end
+        entries
       end
     end
   end

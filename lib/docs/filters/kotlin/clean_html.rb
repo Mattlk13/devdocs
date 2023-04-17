@@ -15,10 +15,14 @@ module Docs
         end
 
         css('pre').each do |node|
-          node['data-language'] = 'kotlin' if node.at_css('code[data-lang="text/x-kotlin"]')
-          node['data-language'] = 'xml' if node.at_css('code[data-lang="application/xml"]')
-          node['data-language'] = 'javascript' if node.at_css('code[data-lang="text/javascript"]')
+          node['data-language'] = 'kotlin' if node.at_css('code.language-kotlin')
+          node['data-language'] = 'groovy' if node.at_css('code.language-groovy')
+          node['data-language'] = 'javascript' if node.at_css('code.language-javascript')
+          node['data-language'] = 'xml' if node.at_css('code.language-xml')
           node.content = node.content
+          node.parent.remove_attribute('data-highlight-only')
+          node.parent.remove_attribute('data-lang')
+          node.parent.remove_attribute('theme')
         end
       end
 
@@ -45,6 +49,13 @@ module Docs
           parent.inner_html = node.inner_html.gsub('<br>', "\n").strip
           parent.content = parent.content
           parent['data-language'] = 'kotlin'
+        end
+
+        css('.tags').each do |wrapper|
+          platforms = wrapper.css('.platform:not(.tag-value-Common)').to_a
+          platforms = platforms.map { |node| "#{node.content} (#{node['data-tag-version']})" }
+          platforms = "<b>Platform and version requirements:</b> #{platforms.join ", "}"
+          wrapper.replace(platforms)
         end
       end
     end

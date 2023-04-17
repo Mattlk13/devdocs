@@ -1,34 +1,46 @@
 module Docs
   class Typescript < UrlScraper
+    include MultipleBaseUrls
+
     self.name = 'TypeScript'
-    self.type = 'simple'
-    self.release = '3.1.6'
-    self.base_url = 'https://www.typescriptlang.org/docs/'
-    self.root_path = 'tutorial.html'
+    self.type = 'typescript'
+    self.release = '4.2.3'
+    self.base_urls = [
+      'https://www.typescriptlang.org/docs/handbook/',
+      'https://www.typescriptlang.org/'
+    ]
+
+    def initial_urls
+      [ 'https://www.typescriptlang.org/docs/handbook/',
+        'https://www.typescriptlang.org/tsconfig' ]
+    end
+
     self.links = {
       home: 'https://www.typescriptlang.org',
       code: 'https://github.com/Microsoft/TypeScript'
     }
 
-    html_filters.push 'typescript/entries', 'typescript/clean_html'
+    html_filters.push 'typescript/entries', 'typescript/clean_html', 'title'
 
-    options[:container] = '#doc-content'
-    options[:skip] = %w(home.html)
-    options[:skip_link] = ->(node) { node.parent.parent['class'] == 'dropdown-menu' }
-    options[:fix_urls] = ->(url) {
-      url.sub!(/(\w+)\.md/) { "#{$1.downcase}.html" }
-      url
-    }
+    options[:container] = 'main'
+
+    options[:skip] = [
+      'react-&-webpack.html'
+    ]
+
+    options[:skip_patterns] = [
+      /release-notes/,
+      /play\//
+    ]
 
     options[:attribution] = <<-HTML
-      &copy; Microsoft and other contributors<br>
+      &copy; 2012-2021 Microsoft<br>
       Licensed under the Apache License, Version 2.0.
     HTML
 
     def get_latest_version(opts)
       get_latest_github_release('Microsoft', 'TypeScript', opts)
     end
+
   end
 end
-
-

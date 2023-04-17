@@ -3,7 +3,7 @@ module Docs
     self.type = 'dart'
     self.root_path = 'index.html'
     self.links = {
-      home: 'https://www.dartlang.org/',
+      home: 'https://dart.dev/',
       code: 'https://github.com/dart-lang/sdk'
     }
 
@@ -20,22 +20,21 @@ module Docs
       Licensed under the Creative Commons Attribution-ShareAlike License v4.0.
     HTML
 
-    # Download the documentation from https://www.dartlang.org/tools/sdk/archive
-
     version '2' do
-      self.release = '2.0.0'
-      self.base_url = "https://api.dartlang.org/stable/#{release}/"
+      self.release = '2.12.2'
+      self.base_url = "https://api.dart.dev/stable/#{release}/"
     end
 
     version '1' do
       self.release = '1.24.3'
-      self.base_url = "https://api.dartlang.org/stable/#{release}/"
+      self.base_url = "https://api.dart.dev/stable/#{release}/"
     end
 
     def get_latest_version(opts)
-      doc = fetch_doc('https://api.dartlang.org/', opts)
+      doc = fetch_doc('https://api.dart.dev/', opts)
       label = doc.at_css('footer > span').content.strip
-      label.sub(/Dart /, '')
+      label.sub(/Dart\s*/, '')
     end
+
   end
 end

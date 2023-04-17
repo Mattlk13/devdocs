@@ -199,6 +199,8 @@ page.track = (fn) ->
   return
 
 track = ->
+  return unless app.config.env == 'production'
+
   consentGiven = Cookies.get('analyticsConsent')
   consentAsked = Cookies.get('analyticsConsentAsked')
 
@@ -214,6 +216,6 @@ track = ->
 @resetAnalytics = ->
   for cookie in document.cookie.split(/;\s?/)
     name = cookie.split('=')[0]
-    if name[0] == '_'
+    if name[0] == '_' && name[1] != '_'
       Cookies.expire(name)
   return

@@ -1,13 +1,15 @@
 module Docs
   class Openjdk < FileScraper
-    # Downloaded from packages.debian.org/sid/openjdk-8-doc
-    # Extracting subdirectory /usr/share/doc/openjdk-8-jre-headless/api
+
     self.name = 'OpenJDK'
     self.type = 'openjdk'
     self.root_path = 'overview-summary.html'
+    self.links = {
+      home: 'https://openjdk.java.net/',
+      code: 'https://github.com/openjdk/jdk'
+    }
 
     html_filters.insert_after 'internal_urls', 'openjdk/clean_urls'
-    html_filters.push 'openjdk/entries', 'openjdk/clean_html'
 
     options[:skip_patterns] = [
       /compact[123]-/,
@@ -15,18 +17,51 @@ module Docs
       /package-tree\.html/,
       /package-use\.html/,
       /class-use\//,
-      /doc-files\//]
+      /doc-files\//,
+      /\.svg/,
+      /\.png/
+    ]
+
+    options[:only_patterns] = [
+      /\Ajava\./,
+      /\Ajdk\./
+    ]
 
     options[:attribution] = <<-HTML
-      &copy; 1993&ndash;2017, Oracle and/or its affiliates. All rights reserved.<br>
+      &copy; 1993, 2020, Oracle and/or its affiliates. All rights reserved.<br>
       Documentation extracted from Debian's OpenJDK Development Kit package.<br>
       Licensed under the GNU General Public License, version 2, with the Classpath Exception.<br>
       Various third party code in OpenJDK is licensed under different licenses (see Debian package).<br>
       Java and OpenJDK are trademarks or registered trademarks of Oracle and/or its affiliates.
     HTML
 
+    NEWFILTERS = ['openjdk/entries_new', 'openjdk/clean_html_new']
+
+    version '15' do
+      self.release = '15.0.1'
+      self.root_path = 'index.html'
+      self.base_url = 'https://docs.oracle.com/en/java/javase/15/docs/api/'
+
+      html_filters.push NEWFILTERS
+
+      options[:container] = 'main'
+    end
+
+    OLDFILTERS = ['openjdk/entries', 'openjdk/clean_html']
+
+    version '11' do
+      self.release = '11.0.10'
+      self.root_path = 'index.html'
+      self.base_url = 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+
+      html_filters.push OLDFILTERS
+    end
+
     version '8' do
       self.release = '8'
+      self.base_url = 'https://docs.oracle.com/javase/8/docs/api/'
+
+      html_filters.push OLDFILTERS
 
       options[:only_patterns] = [
         /\Ajava\/beans\//,
@@ -50,19 +85,28 @@ module Docs
         /\Ajavax\/script\//,
         /\Ajavax\/security\//,
         /\Ajavax\/sound\//,
-        /\Ajavax\/tools\//]
+        /\Ajavax\/tools\//
+      ]
     end
 
     version '8 GUI' do
       self.release = '8'
+      self.base_url = 'https://docs.oracle.com/javase/8/docs/api/'
+
+      html_filters.push OLDFILTERS
 
       options[:only_patterns] = [
         /\Ajava\/awt\//,
-        /\Ajavax\/swing\//]
+        /\Ajavax\/swing\//
+      ]
+
     end
 
     version '8 Web' do
       self.release = '8'
+      self.base_url = 'https://docs.oracle.com/javase/8/docs/api/'
+
+      html_filters.push OLDFILTERS
 
       options[:only_patterns] = [
         /\Ajava\/applet\//,
